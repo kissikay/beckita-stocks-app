@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "your_vibrant_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET || "your_vibrant_secret_key";
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies?.token;

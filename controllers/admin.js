@@ -2,7 +2,7 @@ import Admin from "../models/admin.js";
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinary.js";
 
-const JWT_SECRET = "your_vibrant_secret_key"; // In production, use environment variables
+const JWT_SECRET = process.env.JWT_SECRET || "your_vibrant_secret_key";
 
 export const register = async (req, res) => {
     const { fullName, email, password } = req.body;
