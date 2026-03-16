@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+<div class="approvals-section">
+    <div class="header-section mb-5">
+        <h1>Admin Approvals</h1>
+        <p class="text-muted">Approve or deny pending manager registrations.</p>
+    </div>
+
+    <div class="glass p-4">
+        <table class="inventory-table w-100">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Registered At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="approvalsBody">
+                <!-- Pending admins loaded here -->
+            </tbody>
+        </table>
+        <div id="noPending" class="text-center p-5" style="display:none;">
+            <p class="text-muted">No pending approvals at the moment.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+async function loadPending() {
+    const res = await fetch('/api/admin/pending');
+    const data = await res.json();
+    const body = document.getElementById('approvalsBody');
+    const empty = document.getElementById('noPending');
+    
+    if (data.length === 0) {
+        body.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+    
+    empty.style.display = 'none';
+    body.innerHTML = data.map(admin => `
+        <tr>
+            <td>${admin.fullName}</td>
+            <td>${admin.email}</td>
+            <td>${new Date(admin.createdAt).toLocaleDateString()}</td>
+            <td>
+                <button class="btn-sm btn-outline text-success" onclick="approveAdmin('${admin._id}')">Approve</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function approveAdmin(adminId) {
+    const res = await fetch('/api/admin/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminId })
+    });
+    
+    if (res.ok) {
+        alert('Admin approved!');
+        loadPending();
+    } else {
+        const data = await res.json();
+        alert(data.error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadPending);
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+
+<div class="sales-container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="gradient-text">Sales Counter</h1>
+            <p class="text-muted" style="font-size: 1.1rem;">Select products and complete transactions in seconds.</p>
+        </div>
+    </div>
+
+    <div class="sales-grid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem;">
+        <div class="products-selection glass p-4">
+            <h3 class="mb-4">Select Products</h3>
+            <div class="search-bar mb-4">
+                <input type="text" id="posSearch" class="w-100" oninput="renderPOSProducts(this.value)" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; color: white;" placeholder="Search products...">
+            </div>
+            <div class="products-grid" id="posProducts" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+
+        <div class="cart-section glass p-4 d-flex flex-column" style="min-height: 500px;">
+            <h3 class="mb-4">Current Sale</h3>
+            <div class="cart-items flex-grow-1 overflow-auto">
+                <table class="w-100">
+                    <tbody id="cartBody">
+                        <!-- Cart items here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="cart-summary mt-4 border-top pt-4" style="border-color: var(--glass-border) !important;">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal</span>
+                    <span id="subtotal" style="font-weight: 600;">$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="h4" style="font-weight: 700;">Total</span>
+                    <span class="h4 text-blue" id="total" style="font-weight: 800; font-size: 1.8rem;">$0.00</span>
+                </div>
+                <button class="btn-primary w-100 p-3" onclick="completeSale()">Complete Sale</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro - Premium Stocks Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-dark text-light">
+    <div class="sidebar">
+        <div class="logo">
+            <h2>StockPro</h2>
+        </div>
+        <nav id="mainNav">
+            <a href="/" class="nav-link" data-page="home">Dashboard</a>
+            <a href="/profile" class="nav-link" data-page="profile">
+                <img src="<%= (locals.user && user.profileImage) ? user.profileImage : 'https://via.placeholder.com/24' %>" 
+                     style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary); margin-right: 8px;">
+                Profile
+            </a>
+            <a href="/inventory" class="nav-link" data-page="inventory">Inventory</a>
+            <a href="/sales" class="nav-link" data-page="sales">Sales Counter</a>
+            <a href="/analytics" class="nav-link" data-page="analytics">Insights</a>
+            <% if (locals.user && user.role === 'super_admin') { %>
+                <a href="/approvals" class="nav-link" data-page="approvals">Approvals</a>
+            <% } %>
+            <a href="/login" class="nav-link mt-auto">Logout</a>
+        </nav>
+        <script>
+            document.querySelectorAll('#mainNav .nav-link').forEach(link => {
+                const path = window.location.pathname;
+                const dataPage = link.getAttribute('data-page');
+                if (path === '/' && dataPage === 'home') link.classList.add('active');
+                else if (path === '/' + dataPage) link.classList.add('active');
+            });
+        </script>
+    </div>
+    <main class="content p-4">

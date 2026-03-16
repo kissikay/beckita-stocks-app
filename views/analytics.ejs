@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<div class="analytics-section">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="gradient-text">Insights & Analytics</h1>
+            <p class="text-muted" style="font-size: 1.1rem;">Track your profits and performance over time.</p>
+        </div>
+        <div class="period-selector">
+            <button class="btn-period active" onclick="loadInsights('daily', this)">Daily</button>
+            <button class="btn-period" onclick="loadInsights('weekly', this)">Weekly</button>
+            <button class="btn-period" onclick="loadInsights('monthly', this)">Monthly</button>
+        </div>
+    </div>
+
+    <div class="insights-grid">
+        <div class="glass p-4 mb-4">
+            <h3 class="mb-4">Net Profit Trend</h3>
+            <div class="chart-placeholder" style="height: 340px; position: relative;">
+                <canvas id="profitChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="glass p-4">
+            <h3>Top Selling Products</h3>
+            <table class="inventory-table w-100">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Units Sold</th>
+                        <th>Revenue</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody id="topSellingBody">
+                    <!-- Data here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

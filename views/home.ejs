@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<div class="dashboard-grid">
+    <div class="header-section mb-5">
+        <h1 class="gradient-text">Welcome Back, Manager</h1>
+        <p class="text-muted" style="font-size: 1.1rem;">Here is your real-time stock and sales performance.</p>
+    </div>
+
+    <div class="stats-row mb-4">
+        <div class="stat-card glass">
+            <div class="stat-label">Total Sales</div>
+            <div class="stat-value" id="dashTotalSales">$0.00</div>
+            <div class="stat-trend text-success">Updated just now</div>
+        </div>
+        <div class="stat-card glass">
+            <div class="stat-label">Total Profit</div>
+            <div class="stat-value text-purple" id="dashTotalProfit">$0.00</div>
+            <div class="stat-trend text-success">Updated just now</div>
+        </div>
+        <div class="stat-card glass">
+            <div class="stat-label">Active Products</div>
+            <div class="stat-value text-blue" id="dashOrderCount">0</div>
+            <div class="stat-trend">Total sales volume</div>
+        </div>
+    </div>
+
+    <div class="charts-row">
+        <div class="chart-container glass p-4">
+            <h3>Sales Insights</h3>
+            <div class="chart-placeholder">
+                <!-- Chart.js will go here -->
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+        <div class="recent-sales glass p-4">
+            <h3>Recent Sales</h3>
+            <div class="sales-list">
+                <div class="sale-item">
+                    <div class="sale-info">
+                        <span class="sale-id">#ORD-12345</span>
+                        <span class="sale-date">2 mins ago</span>
+                    </div>
+                    <div class="sale-amount">$120.00</div>
+                </div>
+                <!-- More items -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
