@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import connectDB from "./utils/db.config.js";
 import Admin from "./models/admin.js";
 import { login, register, getPendingAdmins, approveAdmin, getProfile, updateProfile } from "./controllers/admin.js";
@@ -11,7 +12,8 @@ import { createProduct, restockProduct, getProducts } from "./controllers/produc
 import { createOrder, getInsights } from "./controllers/order.js";
 import { verifyToken } from "./middleware/auth.js";
 
-const JWT_SECRET = "your_vibrant_secret_key";
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET || "your_vibrant_secret_key";
 
 const app = express();
 
@@ -31,11 +33,7 @@ app.use(async (req, res, next) => {
             const decoded = jwt.verify(token, JWT_SECRET);
             const fullUser = await Admin.findById(decoded.id);
             res.locals.user = fullUser;
-            if (fullUser) {
-                console.log(`[Middleware] User: ${fullUser.fullName}, Image: ${fullUser.profileImage || 'None'}`);
-            }
         } catch (e) {
-            console.error("[Middleware] Auth Error:", e.message);
             res.locals.user = null;
         }
     } else {
@@ -84,5 +82,5 @@ app.get("/profile", verifyToken, async (req, res) => {
     }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
