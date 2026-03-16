@@ -32,8 +32,8 @@ export const login = async (req, res) => {
             return res.status(400).json({ "error": "All fields are required" });
         }
 
-        const user = await Admin.findOne({ email, password });
-        if (!user) {
+        const user = await Admin.findOne({ email });
+        if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ "error": "Invalid email or password" });
         }
 
