@@ -10,21 +10,20 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        let data = {};
+        try { data = await response.json(); } catch (_) {}
 
         if (response.ok) {
             window.location.href = '/';
         } else if (response.status === 403) {
-            // Show Waiting UI
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('waitingUI').style.display = 'block';
-            document.getElementById('statusMsg').textContent = data.error;
+            document.getElementById('statusMsg').textContent = data.error || 'Pending approval';
         } else {
-            alert(data.error || 'Login failed');
+            alert(data.error || `Login failed (${response.status}). Please try again.`);
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Something went wrong');
+        alert('Cannot reach server. Please check your connection.');
     }
 });
 
@@ -41,17 +40,17 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
             body: JSON.stringify({ fullName, email, password })
         });
 
-        const data = await response.json();
+        let data = {};
+        try { data = await response.json(); } catch (_) {}
 
         if (response.ok) {
-            alert(data.message);
+            alert(data.message || 'Registered successfully!');
             window.location.href = '/login';
         } else {
-            alert(data.error || 'Registration failed');
+            alert(data.error || `Registration failed (${response.status}).`);
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Something went wrong');
+        alert('Cannot reach server. Please check your connection.');
     }
 });
 
