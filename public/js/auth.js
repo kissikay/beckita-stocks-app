@@ -14,7 +14,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         try { data = await response.json(); } catch (_) {}
 
         if (response.ok) {
-            window.location.href = '/';
+            window.location.href = '/dashboard';
         } else if (response.status === 403) {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('waitingUI').style.display = 'block';
