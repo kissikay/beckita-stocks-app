@@ -44,7 +44,11 @@ adminSchema.pre("save", async function(next) {
 
 // Method to compare password
 adminSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        return false; // Return false instead of crashing on plain-text or invalid hash
+    }
 };
 
 const Admin = mongoose.model("Admin",adminSchema);
