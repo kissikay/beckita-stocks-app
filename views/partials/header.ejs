@@ -9,7 +9,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-dark text-light">
-    <div class="sidebar">
+    <div class="mobile-header">
+        <div class="logo">
+            <h2 style="margin-bottom: 0; font-size: 1.4rem;">StockPro</h2>
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="sidebar" id="sidebar">
         <div class="logo">
             <h2>StockPro</h2>
         </div>
@@ -29,12 +40,25 @@
             <a href="/login" class="nav-link mt-auto">Logout</a>
         </nav>
         <script>
+            // Active link highlighting
             document.querySelectorAll('#mainNav .nav-link').forEach(link => {
                 const path = window.location.pathname;
                 const dataPage = link.getAttribute('data-page');
                 if (path === '/' && dataPage === 'home') link.classList.add('active');
                 else if (path === '/' + dataPage) link.classList.add('active');
             });
+
+            // Mobile menu toggle logic
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('active');
+            }
+
+            if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
         </script>
     </div>
-    <main class="content p-4">
+    <main class="content">

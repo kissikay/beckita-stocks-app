@@ -7,19 +7,21 @@
     </div>
 
     <div class="glass p-4">
-        <table class="inventory-table w-100">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Registered At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="approvalsBody">
-                <!-- Pending admins loaded here -->
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="inventory-table w-100">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Registered At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="approvalsBody">
+                    <!-- Pending admins loaded here -->
+                </tbody>
+            </table>
+        </div>
         <div id="noPending" class="text-center p-5" style="display:none;">
             <p class="text-muted">No pending approvals at the moment.</p>
         </div>

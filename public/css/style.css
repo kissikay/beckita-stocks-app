@@ -30,6 +30,34 @@ body {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+}
+
+/* Mobile Header (Hidden by default) */
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 1.5rem;
+    z-index: 1000;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Sidebar Styling */
@@ -41,7 +69,17 @@ body {
     padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 1100;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1050;
 }
 
 .logo h2 {
@@ -308,3 +346,97 @@ h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-light); letter-spaci
 
 .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
 .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+/* Grid Definitions for Response Control */
+.sales-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2.5rem;
+}
+
+.insights-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Responsive Media Queries */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .content { padding: 2.5rem; }
+    h1 { font-size: 2.2rem; }
+    .sales-grid {
+        grid-template-columns: 1fr;
+    }
+    .cart-section {
+        min-height: auto !important;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+    .mobile-header { display: flex; }
+    
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        width: 260px;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .sidebar.active + .sidebar-overlay {
+        display: block;
+    }
+
+    .content {
+        padding: 5.5rem 1.5rem 2rem 1.5rem; /* Space for mobile header */
+        width: 100%;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    h1 { font-size: 1.8rem; }
+    
+    .modal {
+        width: 90%;
+        padding: 2.5rem 1.5rem;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .inventory-table {
+        min-width: 600px; /* Force scrollable on small screens */
+    }
+
+    .d-flex.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .period-selector {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
+}
