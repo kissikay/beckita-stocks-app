@@ -25,7 +25,7 @@
             <h2>StockPro</h2>
         </div>
         <nav id="mainNav">
-            <a href="/" class="nav-link" data-page="home">Dashboard</a>
+            <a href="/dashboard" class="nav-link" data-page="dashboard">Dashboard</a>
             <a href="/profile" class="nav-link" data-page="profile">
                 <img src="<%= (locals.user && user.profileImage) ? user.profileImage : 'https://via.placeholder.com/24' %>" 
                      style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary); margin-right: 8px;">
@@ -44,8 +44,7 @@
             document.querySelectorAll('#mainNav .nav-link').forEach(link => {
                 const path = window.location.pathname;
                 const dataPage = link.getAttribute('data-page');
-                if (path === '/' && dataPage === 'home') link.classList.add('active');
-                else if (path === '/' + dataPage) link.classList.add('active');
+                if (path === '/' + dataPage) link.classList.add('active');
             });
 
             // Mobile menu toggle logic

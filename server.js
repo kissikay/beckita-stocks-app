@@ -77,7 +77,8 @@ app.post("/api/orders", verifyToken, createOrder);
 app.get("/api/insights", verifyToken, getInsights);
 
 // View Routes
-app.get("/", (req, res) => res.render("home"));
+app.get("/", (req, res) => res.render("landing"));
+app.get("/dashboard", verifyToken, (req, res) => res.render("home"));
 app.get("/login", (req, res) => res.render("user")); 
 app.get("/register", (req, res) => res.render("register")); // New register view
 app.get("/inventory", verifyToken, (req, res) => res.render("admin")); 

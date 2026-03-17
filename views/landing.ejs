@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro - Precision Inventory Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            height: auto;
+            overflow-y: auto;
+            background: radial-gradient(circle at top right, #1e1b4b 0%, #07080c 60%);
+            display: block;
+        }
+
+        .landing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Navbar */
+        .landing-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .landing-nav .logo h2 {
+            margin-bottom: 0;
+            padding-left: 0;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 4rem 0 8rem 0;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-ui-preview {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 50px 100px -20px rgba(92, 82, 255, 0.2);
+            transform: perspective(1000px) rotateY(-15deg) rotateX(10deg);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-ui-preview:hover {
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding-bottom: 8rem;
+        }
+
+        .feature-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-box h3 {
+            margin-bottom: 1rem;
+        }
+
+        .feature-box p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(92, 82, 255, 0.1), rgba(156, 111, 255, 0.1));
+            border-radius: 40px;
+            padding: 6rem;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 8rem;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content h1 { font-size: 3rem; }
+            .hero-visual {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cta-section { padding: 3rem 1.5rem; }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Navbar -->
+        <nav class="landing-nav">
+            <div class="logo">
+                <h2 class="gradient-text">StockPro</h2>
+            </div>
+            <div class="nav-actions">
+                <a href="/login" style="color: var(--text-light); text-decoration: none; font-weight: 600;">Sign In</a>
+                <a href="/register" class="btn-primary" style="padding: 0.8rem 1.8rem; text-decoration: none;">Get Started</a>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="gradient-text">Reinvent Your Inventory <br>With Precision.</h1>
+                <p>Empower your business with real-time analytics, seamless sales tracking, and intelligent stock management — all in one premium workspace.</p>
+                <div class="d-flex gap-2">
+                    <a href="/login" class="btn-primary" style="padding: 1.2rem 3rem; text-decoration: none; font-size: 1.1rem;">Launch Dashboard</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-ui-preview">
+                    <div style="height: 10px; width: 60%; background: var(--primary); border-radius: 5px; margin-bottom: 1rem;"></div>
+                    <div style="height: 10px; width: 40%; background: var(--accent-blue); opacity: 0.3; border-radius: 5px; margin-bottom: 2rem;"></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div style="height: 80px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);"></div>
+                        <div style="height: 80px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border);"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature-box">
+                <span class="feature-icon">📊</span>
+                <h3 class="gradient-text">Real-time Insights</h3>
+                <p>Monitor your performance with daily, weekly, and monthly growth trends visualized for better decision making.</p>
+            </div>
+            <div class="feature-box">
+                <span class="feature-icon">📦</span>
+                <h3 class="gradient-text">Smart Inventory</h3>
+                <p>Automate stock warnings and restock workflows to ensure you never run out of your best-selling items.</p>
+            </div>
+            <div class="feature-box">
+                <span class="feature-icon">⚡</span>
+                <h3 class="gradient-text">Flash Sales Counter</h3>
+                <p>Execute transactions in seconds with our optimized POS-style terminal designed for high-speed retail.</p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section glass shadow-vibrant">
+            <h2 class="gradient-text">Ready to scale your business?</h2>
+            <p class="text-muted mb-5" style="font-size: 1.2rem;">Join hundreds of managers who have optimized their operations with StockPro.</p>
+            <a href="/register" class="btn-primary" style="padding: 1.2rem 4rem; text-decoration: none; font-size: 1.2rem;">Register Account</a>
+        </section>
+
+        <footer style="padding: 4rem 0; text-align: center; border-top: 1px solid var(--glass-border);">
+            <p class="text-muted">&copy; 2026 StockPro Management Inc. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
