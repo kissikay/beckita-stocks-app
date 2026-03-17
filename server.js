@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -17,16 +18,26 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_vibrant_secret_key";
 
 const app = express();
 
-// Middleware
+// 1. Logging & Static Files (Always available)
+app.use(morgan("dev"));
+app.use(express.static("public"));
+app.get("/health", (req, res) => res.status(200).send("OK"));
+
+// 2. Parsers
 app.use(express.json());
 app.use(cors());
-app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(express.static("public"));
+
 app.set("view engine", "ejs");
 
-// Middleware to make user info available in all views
+// 3. User Context Middleware (Safeguarded against DB hangs)
 app.use(async (req, res, next) => {
+    // If DB is not connected, skip user lookup to prevent hanging
+    if (mongoose.connection.readyState !== 1) {
+        res.locals.user = null;
+        return next();
+    }
+
     const token = req.cookies?.token;
     if (token) {
         try {
@@ -83,4 +94,6 @@ app.get("/profile", verifyToken, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server ready at http://0.0.0.0:${PORT}`);
+});
