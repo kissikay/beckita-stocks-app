@@ -146,8 +146,8 @@ h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-light); letter-spaci
 /* Dashboard Cards */
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
     margin-bottom: 3rem;
 }
 
@@ -354,6 +354,13 @@ h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-light); letter-spaci
     gap: 2.5rem;
 }
 
+.charts-row {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
 .insights-grid {
     display: flex;
     flex-direction: column;
@@ -366,7 +373,7 @@ h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-light); letter-spaci
 @media (max-width: 1024px) {
     .content { padding: 2.5rem; }
     h1 { font-size: 2.2rem; }
-    .sales-grid {
+    .sales-grid, .charts-row {
         grid-template-columns: 1fr;
     }
     .cart-section {
@@ -404,10 +411,7 @@ h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-light); letter-spaci
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
-
-    .stat-card {
-        padding: 1.5rem;
-    }
+    .login-card { width: 100%; max-width: 450px; padding: 2.5rem; text-align: center; }
 
     h1 { font-size: 1.8rem; }
     

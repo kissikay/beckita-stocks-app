@@ -138,16 +138,23 @@
             .hero {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 3rem;
             }
             .hero-content h1 { font-size: 3rem; }
             .hero-visual {
-                display: none;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            .hero-ui-preview {
+                transform: perspective(1000px) rotateY(0deg) rotateX(10deg);
             }
         }
 
         @media (max-width: 768px) {
             .cta-section { padding: 3rem 1.5rem; }
             .hero-content h1 { font-size: 2.5rem; }
+            .hero-visual { display: none; }
+            .nav-actions a:first-child { display: none; } /* Hide Sign In text to save space */
         }
     </style>
 </head>
