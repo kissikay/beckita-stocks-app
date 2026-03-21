@@ -6,10 +6,10 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.config.js";
 import Admin from "./models/admin.js";
-import { login, register, getPendingAdmins, approveAdmin, getProfile, updateProfile } from "./controllers/admin.js";
+import { login, register, getPendingAdmins, approveAdmin, getProfile, updateProfile, getAdminsSummary } from "./controllers/admin.js";
 import { upload } from "./utils/cloudinary.js";
 import jwt from "jsonwebtoken";
-import { createProduct, restockProduct, getProducts } from "./controllers/product.js";
+import { createProduct, restockProduct, getProducts, updateProduct, deleteProduct } from "./controllers/product.js";
 import { createOrder, getInsights } from "./controllers/order.js";
 import { verifyToken } from "./middleware/auth.js";
 
@@ -62,6 +62,7 @@ app.post("/api/admin/login", login);
 
 // Protected Admin Approval Routes
 app.get("/api/admin/pending", verifyToken, getPendingAdmins);
+app.get("/api/admin/all", verifyToken, getAdminsSummary);
 app.post("/api/admin/approve", verifyToken, approveAdmin);
 
 // Profile Routes
@@ -72,6 +73,8 @@ app.put("/api/admin/profile", verifyToken, upload.single('profileImage'), update
 app.post("/api/products", verifyToken, createProduct);
 app.put("/api/products/restock", verifyToken, restockProduct);
 app.get("/api/products", verifyToken, getProducts);
+app.put("/api/products/:id", verifyToken, updateProduct);
+app.delete("/api/products/:id", verifyToken, deleteProduct);
 
 app.post("/api/orders", verifyToken, createOrder);
 app.get("/api/insights", verifyToken, getInsights);
@@ -85,6 +88,7 @@ app.get("/inventory", verifyToken, (req, res) => res.render("admin"));
 app.get("/sales", verifyToken, (req, res) => res.render("order")); 
 app.get("/analytics", verifyToken, (req, res) => res.render("analytics"));
 app.get("/approvals", verifyToken, (req, res) => res.render("approvals")); // New approvals view
+app.get("/admins", verifyToken, (req, res) => res.render("admins")); // New admin management view
 app.get("/profile", verifyToken, async (req, res) => {
     try {
         const user = await Admin.findById(req.user.id);

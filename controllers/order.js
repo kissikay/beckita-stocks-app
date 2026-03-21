@@ -65,14 +65,31 @@ export const getInsights = async (req, res) => {
             startDate.setMonth(startDate.getMonth() - 1);
         }
 
-        const orders = await Order.find({ createdAt: { $gte: startDate } }).populate('items.productId');
+        const orders = await Order.find({ createdAt: { $gte: startDate } }).sort({ createdAt: -1 }).populate('items.productId');
 
-        const totalSales = orders.reduce((sum, order) => sum + order.totalPrice, 0);
-        const totalProfit = orders.reduce((sum, order) => sum + order.totalProfit, 0);
+        // All-time totals using aggregation for safety/performance
+        const overallResults = await Order.aggregate([
+            { $group: {
+                _id: null,
+                overallSales: { $sum: "$totalPrice" },
+                overallProfit: { $sum: "$totalProfit" },
+                count: { $sum: 1 }
+            }}
+        ]);
+
+        const stats = overallResults[0] || { overallSales: 0, overallProfit: 0, count: 0 };
+        console.log(`[Insights DB Check] Found ${stats.count} total orders via aggregation.`);
+        
+        const overallSales = stats.overallSales;
+        const overallProfit = stats.overallProfit;
+
+        const totalSales = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+        const totalProfit = orders.reduce((sum, order) => sum + (order.totalProfit || 0), 0);
 
         // Aggregate Profit Trend (revenue + profit per day)
         const trendMap = {};
         orders.forEach(order => {
+            if (!order.createdAt) return;
             const date = order.createdAt.toISOString().split('T')[0];
             if (!trendMap[date]) trendMap[date] = { profit: 0, revenue: 0 };
             trendMap[date].profit += order.totalProfit;
@@ -113,9 +130,17 @@ export const getInsights = async (req, res) => {
             period,
             totalSales,
             totalProfit,
-            orderCount: orders.length,
+            overallSales,
+            overallProfit,
+            orderCount: stats.count,
+            periodOrderCount: orders.length,
             profitTrend: formattedTrend,
-            topProducts
+            topProducts,
+            orders: orders.slice(0, 10).map(o => ({
+                id: o.id,
+                totalPrice: o.totalPrice,
+                createdAt: o.createdAt
+            }))
         });
     } catch (error) {
         res.status(500).json({ error: error.message });

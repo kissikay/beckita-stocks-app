@@ -6,13 +6,15 @@ let currentChart = null;
 // Dashboard & Analytics Functions
 async function loadDashboardData() {
     try {
-        const response = await fetch('/api/insights?period=daily');
+        const response = await fetch('/api/insights?period=monthly');
         const data = await response.json();
         
         // Update Stats
         if (document.getElementById('dashTotalSales')) {
-            document.getElementById('dashTotalSales').textContent = `$${data.totalSales.toLocaleString()}`;
-            document.getElementById('dashTotalProfit').textContent = `$${data.totalProfit.toLocaleString()}`;
+            const sales = data.overallSales || 0;
+            const profit = data.overallProfit || 0;
+            document.getElementById('dashTotalSales').textContent = `$${sales.toLocaleString()}`;
+            document.getElementById('dashTotalProfit').textContent = `$${profit.toLocaleString()}`;
             document.getElementById('dashOrderCount').textContent = data.orderCount || 0;
         }
 
@@ -206,7 +208,11 @@ function renderInventory() {
             </td>
             <td>$${p.price.toFixed(2)}</td>
             <td>
-                <button class="btn-outline" style="padding: 0.5rem 1rem;" onclick="openRestockModal('${p._id}')">Restock</button>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;" onclick="openRestockModal('${p._id}')">Restock</button>
+                    <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.85rem;" onclick="openEditModal('${p._id}')">Edit</button>
+                    <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.85rem; border-color: var(--warning); color: var(--warning);" onclick="deleteProduct('${p._id}')">Delete</button>
+                </div>
             </td>
         </tr>
     `).join('');
@@ -331,6 +337,23 @@ function closeAllModals() {
     if(document.getElementById('modalOverlay')) document.getElementById('modalOverlay').style.display = 'none';
     if(document.getElementById('addProductModal')) document.getElementById('addProductModal').style.display = 'none';
     if(document.getElementById('restockModal')) document.getElementById('restockModal').style.display = 'none';
+    if(document.getElementById('editProductModal')) document.getElementById('editProductModal').style.display = 'none';
+}
+
+function openEditModal(id) {
+    const p = products.find(prod => prod._id === id);
+    if (!p) return;
+    document.getElementById('edit_p_object_id').value = p._id;
+    document.getElementById('edit_p_id').value = p.id;
+    document.getElementById('edit_p_name').value = p.name;
+    document.getElementById('edit_p_category').value = p.category;
+    document.getElementById('edit_p_price').value = p.price;
+    document.getElementById('edit_p_cost').value = p.costPrice;
+    document.getElementById('edit_p_stock').value = p.quantity;
+    document.getElementById('edit_p_min').value = p.minStockLevel || 5;
+    
+    document.getElementById('modalOverlay').style.display = 'block';
+    document.getElementById('editProductModal').style.display = 'block';
 }
 
 async function confirmAdd(e) {
@@ -382,6 +405,50 @@ async function confirmRestock(e) {
     }
 }
 
+async function confirmEdit(e) {
+    e.preventDefault();
+    const _id = document.getElementById('edit_p_object_id').value;
+    const productData = {
+        id: document.getElementById('edit_p_id').value,
+        name: document.getElementById('edit_p_name').value,
+        category: document.getElementById('edit_p_category').value,
+        price: parseFloat(document.getElementById('edit_p_price').value),
+        costPrice: parseFloat(document.getElementById('edit_p_cost').value),
+        quantity: parseInt(document.getElementById('edit_p_stock').value),
+        minStockLevel: parseInt(document.getElementById('edit_p_min').value)
+    };
+
+    const res = await fetch(`/api/products/${_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+    });
+
+    if (res.ok) {
+        closeAllModals();
+        loadInventory();
+        e.target.reset();
+    } else {
+        const error = await res.json();
+        alert(error.error);
+    }
+}
+
+async function deleteProduct(id) {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    
+    const res = await fetch(`/api/products/${id}`, {
+        method: 'DELETE'
+    });
+
+    if (res.ok) {
+        loadInventory();
+    } else {
+        const error = await res.json();
+        alert(error.error);
+    }
+}
+
 async function completeSale() {
     if (cart.length === 0) return alert('Cart is empty');
 
@@ -406,10 +473,51 @@ async function completeSale() {
     }
 }
 
+async function loadAdminsPerformance() {
+    const tableBody = document.getElementById('adminsPerformanceTable');
+    if (!tableBody) return;
+
+    try {
+        const response = await fetch('/api/admin/all');
+        const data = await response.json();
+
+        if (data.error) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-warning">${data.error}</td></tr>`;
+            return;
+        }
+
+        if (data.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No approved admins found.</td></tr>`;
+            return;
+        }
+
+        tableBody.innerHTML = data.map(admin => `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="${admin.profileImage || 'https://via.placeholder.com/32'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                            <div style="font-weight: 600;">${admin.fullName}</div>
+                            <div class="text-muted" style="font-size: 0.8rem;">${admin.email}</div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="badge badge-success">${admin.status}</span></td>
+                <td>${admin.totalOrders || 0}</td>
+                <td>$${(admin.totalSales || 0).toLocaleString()}</td>
+                <td class="text-purple" style="font-weight: 600;">$${(admin.totalProfit || 0).toLocaleString()}</td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        console.error('Error loading admin performance:', e);
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Error loading data.</td></tr>`;
+    }
+}
+
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
-    if (path === '/' || path === '/home') {
+    if (path === '/' || path === '/home' || path === '/dashboard') {
         loadDashboardData();
     } else if (path === '/analytics') {
         loadInsights();
@@ -417,5 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadInventory();
     } else if (path === '/sales') {
         loadInventory();
+    } else if (path === '/admins') {
+        loadAdminsPerformance();
     }
 });

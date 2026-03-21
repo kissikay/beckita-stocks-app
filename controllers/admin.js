@@ -1,4 +1,5 @@
 import Admin from "../models/admin.js";
+import Order from "../models/order.js";
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinary.js";
 
@@ -114,6 +115,39 @@ export const updateProfile = async (req, res) => {
             message: "Profile updated successfully", 
             user: { fullName: user.fullName, email: user.email, profileImage: user.profileImage } 
         });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+
+export const getAdminsSummary = async (req, res) => {
+    try {
+        if (req.user.role !== "super_admin") {
+            return res.status(403).json({ error: "Access denied" });
+        }
+
+        const admins = await Admin.find({ role: "admin", status: "approved" }).select("-password");
+        
+        const summary = await Promise.all(admins.map(async (admin) => {
+            const stats = await Order.aggregate([
+                { $match: { soldBy: admin._id } },
+                { $group: {
+                    _id: null,
+                    totalOrders: { $sum: 1 },
+                    totalSales: { $sum: "$totalPrice" },
+                    totalProfit: { $sum: "$totalProfit" }
+                }}
+            ]);
+
+            const adminStats = stats.length > 0 ? stats[0] : { totalOrders: 0, totalSales: 0, totalProfit: 0 };
+            
+            return {
+                ...admin.toObject(),
+                ...adminStats
+            };
+        }));
+
+        res.status(200).json(summary);
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
