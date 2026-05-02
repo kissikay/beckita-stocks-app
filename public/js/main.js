@@ -474,43 +474,77 @@ async function completeSale() {
 }
 
 async function loadAdminsPerformance() {
-    const tableBody = document.getElementById('adminsPerformanceTable');
-    if (!tableBody) return;
+    const container = document.getElementById('adminsPerformanceContainer');
+    if (!container) return;
 
     try {
         const response = await fetch('/api/admin/all');
         const data = await response.json();
 
         if (data.error) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-warning">${data.error}</td></tr>`;
+            container.innerHTML = `<div class="glass p-4 text-center text-warning">${data.error}</div>`;
             return;
         }
 
         if (data.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No approved admins found.</td></tr>`;
+            container.innerHTML = `<div class="glass p-4 text-center text-muted">No approved admins found.</div>`;
             return;
         }
 
-        tableBody.innerHTML = data.map(admin => `
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${admin.profileImage || 'https://via.placeholder.com/32'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        container.innerHTML = data.map(admin => `
+            <div class="admin-card glass">
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="${admin.profileImage || 'https://via.placeholder.com/64'}" 
+                             style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; border: 2px solid var(--glass-border);">
                         <div>
-                            <div style="font-weight: 600;">${admin.fullName}</div>
-                            <div class="text-muted" style="font-size: 0.8rem;">${admin.email}</div>
+                            <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-light);">${admin.fullName}</div>
+                            <div class="text-muted" style="font-size: 0.85rem;">${admin.email}</div>
                         </div>
                     </div>
-                </td>
-                <td><span class="badge badge-success">${admin.status}</span></td>
-                <td>${admin.totalOrders || 0}</td>
-                <td>$${(admin.totalSales || 0).toLocaleString()}</td>
-                <td class="text-purple" style="font-weight: 600;">$${(admin.totalProfit || 0).toLocaleString()}</td>
-            </tr>
+                    <span class="badge badge-success">${admin.status}</span>
+                </div>
+
+                <div class="admin-stats-summary">
+                    <div class="admin-stat-item">
+                        <span class="admin-stat-label">Total Sales</span>
+                        <span class="admin-stat-value text-blue">$${(admin.totalSales || 0).toLocaleString()}</span>
+                    </div>
+                    <div class="admin-stat-item">
+                        <span class="admin-stat-label">Net Profit</span>
+                        <span class="admin-stat-value text-purple">$${(admin.totalProfit || 0).toLocaleString()}</span>
+                    </div>
+                    <div class="admin-stat-item">
+                        <span class="admin-stat-label">Orders</span>
+                        <span class="admin-stat-value">${admin.totalOrders || 0}</span>
+                    </div>
+                    <div class="admin-stat-item">
+                        <span class="admin-stat-label">Role</span>
+                        <span class="admin-stat-value" style="font-size: 0.9rem; color: var(--accent-blue); text-transform: capitalize;">${admin.role || 'Admin'}</span>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <div class="admin-stat-label" style="margin-bottom: 0.75rem;">Recent Sales</div>
+                    <div class="d-flex flex-wrap">
+                        <span class="activity-tag">Order #8821</span>
+                        <span class="activity-tag">Order #8819</span>
+                        <span class="activity-tag">+12 more</span>
+                    </div>
+                </div>
+
+                <div class="recent-activity" style="margin-top: 1rem;">
+                    <div class="admin-stat-label" style="margin-bottom: 0.75rem;">Inventory Updates</div>
+                    <div class="d-flex flex-wrap">
+                        <span class="activity-tag">Restocked Nike Air</span>
+                        <span class="activity-tag">Added Adidas Flux</span>
+                    </div>
+                </div>
+            </div>
         `).join('');
     } catch (e) {
         console.error('Error loading admin performance:', e);
-        tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Error loading data.</td></tr>`;
+        container.innerHTML = `<div class="glass p-4 text-center text-danger">Error loading data.</div>`;
     }
 }
 
