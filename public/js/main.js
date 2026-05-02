@@ -527,17 +527,20 @@ async function loadAdminsPerformance() {
                 <div class="recent-activity">
                     <div class="admin-stat-label" style="margin-bottom: 0.75rem;">Recent Sales</div>
                     <div class="d-flex flex-wrap">
-                        <span class="activity-tag">Order #8821</span>
-                        <span class="activity-tag">Order #8819</span>
-                        <span class="activity-tag">+12 more</span>
+                        ${admin.recentSales && admin.recentSales.length > 0 
+                            ? admin.recentSales.map(s => `<span class="activity-tag">${s.description.split('(')[0]}</span>`).join('')
+                            : '<span class="text-muted" style="font-size: 0.8rem;">No recent sales</span>'
+                        }
                     </div>
                 </div>
 
                 <div class="recent-activity" style="margin-top: 1rem;">
                     <div class="admin-stat-label" style="margin-bottom: 0.75rem;">Inventory Updates</div>
                     <div class="d-flex flex-wrap">
-                        <span class="activity-tag">Restocked Nike Air</span>
-                        <span class="activity-tag">Added Adidas Flux</span>
+                        ${admin.inventoryUpdates && admin.inventoryUpdates.length > 0 
+                            ? admin.inventoryUpdates.map(u => `<span class="activity-tag">${u.description.split('(')[0]}</span>`).join('')
+                            : '<span class="text-muted" style="font-size: 0.8rem;">No updates yet</span>'
+                        }
                     </div>
                 </div>
             </div>

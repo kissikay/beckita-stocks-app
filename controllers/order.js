@@ -1,5 +1,6 @@
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import { logActivity } from "../utils/logger.js";
 
 export const createOrder = async (req, res) => {
     const { items } = req.body; // items: [{ productId, quantity }]
@@ -46,6 +47,15 @@ export const createOrder = async (req, res) => {
         });
 
         await newOrder.save();
+
+        const itemSummary = items.map(i => i.name).join(", ");
+        await logActivity(
+            soldBy,
+            "SALE",
+            `Sold items: ${itemSummary} (Total: $${totalPrice.toFixed(2)})`,
+            { orderId: newOrder._id, totalPrice }
+        );
+
         res.status(201).json({ message: "Sale completed", order: newOrder });
     } catch (error) {
         res.status(500).json({ error: error.message });

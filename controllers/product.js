@@ -1,4 +1,5 @@
 import Product from "../models/product.js";
+import { logActivity } from "../utils/logger.js";
 
 export const createProduct = async (req, res) => {
     const { id, name, price, costPrice, quantity, category, minStockLevel } = req.body;
@@ -13,6 +14,14 @@ export const createProduct = async (req, res) => {
             minStockLevel
         });
         await newProduct.save();
+        
+        await logActivity(
+            req.user.id,
+            "PRODUCT_CREATE",
+            `Created new product: ${name}`,
+            { productId: newProduct._id, name, category }
+        );
+
         res.status(201).json({ message: "Product created successfully", product: newProduct });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -27,6 +36,14 @@ export const restockProduct = async (req, res) => {
 
         product.quantity += Number(addedQuantity);
         await product.save();
+
+        await logActivity(
+            req.user.id,
+            "PRODUCT_RESTOCK",
+            `Restocked ${product.name} (Added ${addedQuantity})`,
+            { productId: product._id, addedQuantity }
+        );
+
         res.status(200).json({ message: "Stock updated", product });
     } catch (error) {
         res.status(500).json({ error: error.message });

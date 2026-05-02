@@ -1,5 +1,6 @@
 import Admin from "../models/admin.js";
 import Order from "../models/order.js";
+import Activity from "../models/activity.js";
 import jwt from "jsonwebtoken";
 import { cloudinary } from "../utils/cloudinary.js";
 
@@ -141,9 +142,24 @@ export const getAdminsSummary = async (req, res) => {
 
             const adminStats = stats.length > 0 ? stats[0] : { totalOrders: 0, totalSales: 0, totalProfit: 0 };
             
+            // Fetch recent activities
+            const recentActivities = await Activity.find({ adminId: admin._id })
+                .sort({ createdAt: -1 })
+                .limit(10);
+
+            const recentSales = recentActivities
+                .filter(a => a.actionType === "SALE")
+                .slice(0, 3);
+
+            const inventoryUpdates = recentActivities
+                .filter(a => ["PRODUCT_CREATE", "PRODUCT_RESTOCK", "PRODUCT_UPDATE"].includes(a.actionType))
+                .slice(0, 3);
+            
             return {
                 ...admin.toObject(),
-                ...adminStats
+                ...adminStats,
+                recentSales,
+                inventoryUpdates
             };
         }));
 
